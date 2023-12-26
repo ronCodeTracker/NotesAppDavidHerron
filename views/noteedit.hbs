@@ -1,11 +1,4 @@
-
-
-
-
-
-
-
-<form method='POST' action='/notes/save'>
+<!--<form method='POST' action='/notes/save'>
     <input type='hidden' name='docreate' value='<%=
     docreate ? "create" : "update"%>'>
     <p>
@@ -24,7 +17,52 @@
     </p>
     <br /><textarea rows=5 cols=40 name='body'>{{#if note }}{{note.body}}{{/if}}</textarea>
     <br /><input type='submit' value='Submit' />
+</form>-->
+
+
+<!--<link rel='stylesheet' href='/assets/stylesheets/style.css' />-->
+
+
+<form method='POST' action='/notes/save'>
+    <div class="container-fluid">
+        {{#if docreate}}
+        <input type='hidden' name='docreate' value="create">
+        {{else}}
+        <input type='hidden' name='docreate' value="update">
+        {{/if}}
+        <div class="form-group row align-items-center">
+            <label for="notekey" class="col-1 col-form-label">Key</label>
+            {{#if docreate }}
+            <div class="col">
+                <input type='text' class="form-control"
+                       placeholder="note key" name='notekey' value='' />
+            </div>
+            {{else}}
+            {{#if note }}
+            <span class="input-group-text margin001">{{notekey}}</span>
+            {{/if}}
+            <input type='hidden' name='notekey'
+                   value='{{#if note }}{{notekey}}{{/if}}' />
+            {{/if}}
+        </div>
+
+        <div class="form-group row">
+            <label for="title" class="col-1 col-form-label">Title</label>
+            <div class="col">
+                <input type="text" class="form-control margin002"
+                       id='title' name='title' placeholder="note title"
+                       value='{{#if note }}{{note.title}}{{/if}}'>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <textarea class="form-control" name='body'
+                      rows="5">{{#if note }}{{note.body}}{{/if}}</textarea>
+        </div>
+        <button type="submit" class="btn btn-outline-dark">Submit</button>
+    </div>
 </form>
+
 
 
 

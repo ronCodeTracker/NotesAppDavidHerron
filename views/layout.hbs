@@ -15,8 +15,20 @@
 
     <!--<link rel='stylesheet' href='/stylesheets/style.css' />-->
 </head>
-  <body>
-      {{> header}}
+<body>
+    {{> header}}
     {{{body}}}
-  </body>
+
+    <!--  jQuery first, then Popper.js, then Bootstrap JS  -->
+
+    <script src="/assets/vendor/jquery/jquery.min.js"></script>
+    <script src="/assets/vendor/popper.js/popper.min.js"></script>
+    <script src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+
+    <script src="/assets/vender/feather-icons/feather.js"></script>
+    <script>feather.replace();</script>
+
+
+</body>
 </html>

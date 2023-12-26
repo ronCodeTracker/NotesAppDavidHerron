@@ -1,0 +1,40 @@
+/*body {
+  padding: 5px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+
+  color: #00B7FF;
+}
+
+header {
+    background: #eeeeee;
+    padding: 5px;
+}*/
+
+.margin001{
+    margin-left: 22px;
+    
+}
+
+
+.margin002{
+    margin-left: 5px;
+}
+
+.margin003{
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+body{
+    padding: 5px;
+}
+
+header {
+    padding: 5px;
+}
+
