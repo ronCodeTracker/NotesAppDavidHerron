@@ -23,7 +23,7 @@ router.post('/save', async (req, res, next) => {
         let note;
         if (req.body.docreate === "create") {
 
-
+            console.log("data: " + req.body.body + "  " + req.body.title)
             note = await notes.create(req.body.notekey,
                 req.body.title, req.body.body);
 
