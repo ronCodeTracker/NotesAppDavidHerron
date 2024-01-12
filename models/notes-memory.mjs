@@ -5,7 +5,7 @@
 
 import { Note, AbstractNotesStore } from './Notes.mjs';
 const notes = [];
-export class InMemoryNotesStore extends AbstractNotesStore {
+export default class InMemoryNotesStore extends AbstractNotesStore {
 
 
     async close() { }
@@ -22,11 +22,11 @@ export class InMemoryNotesStore extends AbstractNotesStore {
     }
 
 
-    async read(key) {
-        if (notes[key]) {
-            return notes[key];
+    async read(key07) {
+        if (notes[key07]) {
+            return notes[key07];
         }
-        else throw new Error(`Note ${key} does not exist`);
+        else throw new Error(`Note ${key07} does not exist`);
     }
 
     async destroy(key) {

@@ -3,11 +3,30 @@
 
 // import * as util from 'util';
 import { default as express } from 'express';
-import { NotesStore as notes } from '../app.mjs';
+import { NotesStore as notes } from '../models/notes-store.mjs';
 export const router = express.Router();
+
+import { default as DBG } from 'debug';
+const debug = DBG('notes:debug');
+const dbgerror = DBG('notes:error'); 
+
+//const capcon = 'capture-console'
+import * as capcon from 'capture-console';
+
+//let stdout;
 
 // Add Note.
 router.get('/add', (req, res, next) => {
+
+    //stdout = capcon.captureStdout(() => {
+    //    // whatever is done in here has stdout captured,
+    //    // the return value is a string containing stdout
+    //    console.log(`add running`);
+    //    return "add running";
+    //});
+
+    
+
     res.render('noteedit', {
         title: "Add a Note",
         docreate: true,
@@ -32,6 +51,7 @@ router.post('/save', async (req, res, next) => {
             note = await notes.update(req.body.notekey,
                 req.body.title, req.body.body);
         }
+        console.log("reqbodynotekey reqbodynotekey reqbodynotekey reqbodynotekey  ::::::::::::::::::" + req.body.notekey);
         res.redirect('/notes/view?key=' + req.body.notekey);
     }
     catch (err) { next(err); }

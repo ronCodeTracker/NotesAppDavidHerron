@@ -2,19 +2,27 @@
 
 
 //var createError = require('http-errors');
+
+
+// import es6 express package
+
 import { default as express } from 'express';
 
-//var express = require('express');
 
+//add package hbs
 import { default as hbs } from 'hbs';
 
+
 import * as path from 'path';
+
 
 //var path = require('path');
 
 // import * as favicon from 'serve-favicon';
 
+// import as logger from morgan
 import { default as logger } from 'morgan';
+
 
 import { default as cookieParser } from 'cookie-parser';
 
@@ -34,7 +42,14 @@ import { normalizePort, onError, onListening, handle404, basicErrorHandler } fro
 import { router as indexRouter } from './routes/index.mjs';
 import { router as notesRouter } from './routes/notes.mjs';
 
-//   *********************************************************material-ui
+
+//   logging  ***********************************************
+import { default as DBG } from 'debug';
+const debug = DBG('notes:debug');
+const dbgerror = DBG('notes:error');
+
+
+//   *********************************************************logging
 
 import { default as rfs } from 'rotating-file-stream';
 
@@ -44,13 +59,21 @@ import { default as rfs } from 'rotating-file-stream';
 
 
 //  ***********************************************************
-//  NotesStore code
+//  NotesStore code data not logging
 
-import { InMemoryNotesStore } from './models/notes-memory.mjs';
-export const NotesStore = new InMemoryNotesStore();
+//import { InMemoryNotesStore } from './models/notes-memory.mjs';
+//export const NotesStore = new InMemoryNotesStore();
 
 
 //   **********************************************************
+//   chapter data storage and retrieval
+//   **********************************************************
+import { useModel as useNotesModel } from './models/notes-store.mjs';
+useNotesModel(process.env.NOTES_MODEL ? process.env.NOTES_MODEL : "memory")
+    .then(store => { console.log("77777777777777777777 memory or something 7777777777777777777" + store); })
+.catch(err => { onError({ code: 'ENOTESSTORE', err }); });
+
+
 
 
 // import { router as notesRouter } from './routes/notes.mjs';
@@ -98,6 +121,10 @@ export const NotesStore = new InMemoryNotesStore();
 
 
 export const app = express();
+
+
+
+//  logging   **********************************************
 
 app.use(logger(process.env.REQUEST_LOG_FORMAT ||'dev', {
     stream: process.env.REQUEST_LOG_FILE ? rfs.createStream(process.env.REQUEST_LOG_FILE, {
@@ -168,7 +195,7 @@ server.on('error', onError);
 server.on('listening', onListening);
 
 
-
+// not needed
 function logFileName(time, index) {
     if (!time) return "file.log";
     return [formatDate(time), index, "file.log"].join("-");
