@@ -10,6 +10,11 @@ const dbgerror = DBG('notes:error');
 
 
 import { port } from './app.mjs';
+
+import { NotesStore } from './models/notes-store.mjs';
+
+
+
 export function normalizePort(val) {
     const port = parseInt(val, 10);
     if (isNaN(port)) {
@@ -102,6 +107,27 @@ export function basicErrorHandler(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 }
+
+
+
+async function catchProcessDeath() {
+    debug('urk...');
+    await NotesStore.close();
+    await server.close();
+    process.exit(0);
+}
+
+process.on('SIGTERM', catchProcessDeath);
+process.on('SIGINT', catchProcessDeath);
+process.on('SIGHUP', catchProcessDeath);
+
+process.on('exit', () => { debug('exiting...'); });
+
+
+// end of appsupport.mjs
+
+
+
 
 
 
