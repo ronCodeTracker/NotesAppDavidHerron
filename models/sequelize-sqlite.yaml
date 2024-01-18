@@ -8,7 +8,8 @@ dbname: notes
 username: 
 password: 
 params: 
-    dialect: msnodesqlv8
+    dialect: sqlite 
+    storage: notes-sequelize.sqlite3
     
     
 
