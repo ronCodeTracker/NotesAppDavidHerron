@@ -1,6 +1,6 @@
 {
   "name": "notes",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "fs-start": "cross-env REQUEST_LOG_FILE=log4.txt REQUEST_LOG_FORMAT=common DEBUG=notes:* PORT=3000 NOTES_MODEL=fs node ./app.mjs",
