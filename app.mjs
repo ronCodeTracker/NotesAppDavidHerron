@@ -41,6 +41,12 @@ import { normalizePort, onError, onListening, handle404, basicErrorHandler } fro
 
 import { router as indexRouter } from './routes/index.mjs';
 import { router as notesRouter } from './routes/notes.mjs';
+import { router as usersRouter, initPassport } from './routes/users.mjs';
+
+import session from 'express-session';
+import sessionFileStore from 'session-file-store';
+const FileStore = sessionFileStore(session);
+export const sessionCookieName = 'notescookie.sid';
 
 
 //   logging  ***********************************************
@@ -144,6 +150,19 @@ app.use(logger(process.env.REQUEST_LOG_FORMAT || 'dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+
+app.use(session({
+    
+    store: new FileStore({ path: "sessions" }),
+    secret: 'keyboard mouse',
+    resave: true,
+    saveUninitialized: true,
+    name: sessionCookieName
+}));
+initPassport(app);
+
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/assets/vender/feather-icons', express.static(path.join(__dirname, 'node_modules', 'feather-icons', 'dist')));
 app.use('assets/vendor/bootstrap', express.static(path.join(__dirname, 'node_modules', 'bootstrap', 'dist')));
@@ -157,6 +176,8 @@ app.use('/assets/vendor/popper.js', express.static(
 // Router function lists
 app.use('/', indexRouter);
 app.use('/notes', notesRouter);
+app.use('/users', usersRouter);
+
 
 // error handlers
 // catch 404 and forward to error handler
