@@ -19,3 +19,96 @@ function reqURL(path) {
 }
 
 
+
+export async function create(username, password,
+    provider, familyName, givenName, middleName,
+    emails, photos) {
+    var res = await request
+        .post(reqURL('/create-user'))
+        .send({
+            username, password: await hashpass(password), provider,
+            familyName, givenName, middleName, emails, photos
+        })
+        .set('Content-Type', 'application/json')
+        .set('Acccept', 'application/json')
+        .auth(authid, authcode);
+    return res.body;
+}
+
+
+
+export async function update(username, password,
+    provider, familyName, givenName, middleName,
+    emails, photos) {
+    var res = await request
+        .post(reqURL(`/update-user/${username}`))
+        .send({
+            username, password: await hashpass(password), provider,
+            familyName, givenName, middleName, emails, photos
+        })
+        .set('Content-Type', 'application/json')
+        .set('Acccept', 'application/json')
+        .auth(authid, authcode);
+    return res.body;
+}
+
+
+export async function find(username) {
+    var res = await request
+        .get(reqURL(`/find/${username}`))
+        .set('Content-Type', 'application/json')
+        .set('Acccept', 'application/json')
+        .auth(authid, authcode);
+    return res.body;
+}
+
+
+export async function userPasswordCheck(username, password) {
+    var res = await request
+        .post(reqURL(`/password-check`))
+        .send({ username, password })
+        .set('Content-Type', 'application/json')
+        .set('Acccept', 'application/json')
+        .auth(authid, authcode);
+    return res.body;
+}
+
+
+
+
+export async function findOrCreate(profile) {
+    var res = await request
+        .post(reqURL('/find-or-create'))
+        .send({
+            username: profile.id,
+            password: await hashpass(profile.password),
+            provider: profile.provider,
+            familyName: profile.familyName,
+            givenName: profile.givenName,
+            middleName: profile.middleName,
+            emails: profile.emails, photos: profile.photos
+        })
+        .set('Content-Type', 'application/json')
+        .set('Acccept', 'application/json')
+        .auth(authid, authcode);
+    return res.body;
+}
+
+
+
+export async function listUsers() {
+    var res = await request
+        .get(reqURL('/list'))
+        .set('Content-Type', 'application/json')
+        .set('Acccept', 'application/json')
+        .auth(authid, authcode);
+    return res.body;
+}
+
+
+
+
+
+
+
+
