@@ -10,6 +10,12 @@ import { default as passportLocal } from 'passport-local';
 const LocalStrategy = passportLocal.Strategy;
 import * as usersModel from '../models/users-superagent.mjs';
 import { sessionCookieName } from '../app.mjs';
+import passportFacebook from 'passport-facebook';
+const FacebookStrategy = passportFacebook.Strategy;
+
+
+
+
 
 export const router = express.Router();
 
@@ -21,7 +27,7 @@ const error = DBG('notes:error-users');
 export function initPassport(app) {
   app.use(passport.initialize());
   app.use(passport.session());
-})
+}
 
 
 export function ensureAuthenticated(req, res, next) {
@@ -34,6 +40,47 @@ catch (e) {
         next(e);
     }
 }
+
+
+const facebookcallback = process.env.FACEBOOK_CALLBACK_HOST ? process.env.FACEBOOK_CALLBACK_HOST : "http://localhost:3000";
+
+export var facebookLogin;
+
+if (typeof process.env.FACEBOOK_APP_ID !== 'undefined' && process.env.FACEBOOK_APP_ID !== '' && typeof process.env.FACEBOOK_APP_SECRET !== 'undefined' && process.env.FACEBOOK_APP_SECRET !== '') {
+    passport.use(new FacebookStrategy({
+        clientID: process.env.FACEBOOK_APP_ID,
+        clientSecret: process.env.FACEBOOK_APP_SECRET,
+        callbackURL: `${facebookcallback}/users/auth/facebook/callback`
+    },
+        async function (accessToken, refreshToken, profile, done) {
+            try {
+
+                done(null, await usersModel.findOrCreate({
+                    id: profile.username, username: profile.username,
+                    password: "", provider: profile.provider, familyName: profile.displayName,
+                    givenName: "", middleName: "", photos: profile.photos, emails: profile.emails
+
+
+                }));
+            }
+            catch (err) { done(err); }
+        }
+    ));
+    facebookLogin = true;
+} else {
+    facebookLogin = false;
+}
+
+
+router.get('/auth/facebook', passport.authenticate('facebook'));
+
+router.get('/auth/facebook/callback',
+    passport.authenticate('facebook', {
+        successRedirect: '/',
+        failureRedirect: '/users/login'
+    }));
+
+
 
 // extra comma?
 

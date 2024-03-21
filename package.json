@@ -3,20 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "fs-start": "cross-env REQUEST_LOG_FILE=log4.txt REQUEST_LOG_FORMAT=common DEBUG=notes:* PORT=3000 NOTES_MODEL=fs node ./app.mjs",
-    "fs-server1": "cross-env NOTES_MODEL=fs PORT=3001 node ./app.mjs",
-    "fs-server2": "cross-env NOTES_MODEL=fs PORT=3002 node ./app.mjs",
-    "level-start": " cross-env DEBUG=notes:* PORT=3000 NOTES_MODEL=level node ./app.mjs",
-    "sqlite3-setup": "sqlite3 chap07.sqlite3 --init models/schema-sqlite3.sql",
-    "sqlite3-start": "cross-env SQLITE_FILE=chap07.sqlite3  DEBUG=notes:* PORT=3000 NOTES_MODEL=sqlite3 node ./app.mjs",
-    "sqlite3-server1": "cross-env SQLITE_FILE=chap07.sqlite3 NOTES_MODEL=sqlite3 PORT=3001 node ./app.mjs",
-    "sqlite3-server2": "cross-env SQLITE_FILE=chap07.sqlite3 NOTES_MODEL=sqlite3 PORT=3002 node ./app.mjs",
-    "sequelize-start": "cross-env DEBUG=Notes:* SEQUELIZE_CONNECT=models/sequelize-sqlite.yaml NOTES_MODEL=sequelize node ./app.mjs",
-    "sequelize-server1": "cross-env SEQUELIZE_CONNECT=models/sequelize-sqlite.yaml NOTES_MODEL=sequelize PORT=3001 node ./app.mjs",
-    "sequelize-server2": "cross-env SEQUELIZE_CONNECT=models/sequelize-sqlite.yaml NOTES_MODEL=sequelize PORT=3002 node ./app.mjs",
-    "mongodb-start": "cross-env DEBUG=notes:* MONGO_URL=mongodb://localhost:27017/ MONGO_DBNAME=chap07 NOTES_MODEL=mongodb node ./app.mjs",
-    "mongodb-server1": "cross-env DEBUG=notes:* MONGO_URL=mongodb://localhost:27017/ MONGO_DBNAME=chap07 NOTES_MODEL=mongodb PORT=3001 node ./app.mjs",
-    "mongodb-server2": "cross-env DEBUG=notes:* MONGO_URL=mongodb://localhost:27017/ MONGO_DBNAME=chap07 NOTES_MODEL=mongodb PORT=3002 node ./app.mjs"
+    "start": "cross-env DEBUG=notes:* SEQUELIZE_CONNECT=models/sequelize-sqlite.yaml NOTES_MODEL=sequelize USER_SERVICE_URL=http://localhost:5858 node ./app.mjs",
+    "start-server1": "cross-env DEBUG=notes:* SEQUELIZE_CONNECT=models/sequelize-sqlite.yaml NOTES_MODEL=sequelize USER_SERVICE_URL=http://localhost:5858 PORT=3000 node ./app.mjs",
+    "start-server2": "cross-env DEBUG=notes:* SEQUELIZE_CONNECT=models/sequelize-sqlite.yaml NOTES_MODEL=sequelize USER_SERVICE_URL=http://localhost:5858 PORT=3002 node ./app.mjs",
+    "dl-minty": "mkdir -p minty && npm run dl-minty-css && npm run dl-minty-min-css",
+    "dl-minty-css": "wget https://bootswatch.com/4/minty/bootstrap.css -O minty/bootstrap.css",
+    "dl-minty-min-css": "wget https://bootswatch.com/4/minty/bootstrap.min.css -O minty/bootstrap.min.css"
   },
   "dependencies": {
     "@mui/material": "^5.15.2",
@@ -25,7 +17,9 @@
     "cookie-parser": "~1.4.4",
     "cross-env": "^7.0.3",
     "debug": "~2.6.9",
+    "dotenv": "8.2.x",
     "express": "~4.16.1",
+    "express-session": "1.17.x",
     "feather-icons": "4.25.x",
     "fs-extra": "^11.2.0",
     "hbs": "~4.0.4",
@@ -37,9 +31,11 @@
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
     "passport": "^0.4.1",
+    "passport-facebook": "^3.0.0",
     "passport-local": "^1.0.0",
     "rotating-file-stream": "^3.2.1",
     "sequelize": "^6.35.2",
+    "session-file-store": "1.4.x",
     "sqlite3": "^5.1.7",
     "superagent": "^5.3.1"
   }

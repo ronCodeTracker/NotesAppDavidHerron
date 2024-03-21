@@ -14,6 +14,7 @@ import { default as hbs } from 'hbs';
 
 
 import * as path from 'path';
+import 'dotenv/config.js';
 
 
 //var path = require('path');
@@ -205,7 +206,7 @@ app.use(basicErrorHandler);
 //    app.use(logger(process.env.REQUEST_LOG_FORMAT || 'dev'));
 //}
 
-export const port = normalizePort(process.env.PORT || '3000');
+export const port = normalizePort(process.env.PORT || process.env.NOTES_APPLICATION_PORT || 3000);
 app.set('port', port);
 
 

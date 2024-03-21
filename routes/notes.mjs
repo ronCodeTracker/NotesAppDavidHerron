@@ -13,10 +13,14 @@ const dbgerror = DBG('notes:error');
 //const capcon = 'capture-console'
 import * as capcon from 'capture-console';
 
+import { ensureAuthenticated } from './users.mjs';
+
+
+
 //let stdout;
 
 // Add Note.
-router.get('/add', (req, res, next) => {
+router.get('/add', ensureAuthenticated,(req, res, next) => {
 
     //stdout = capcon.captureStdout(() => {
     //    // whatever is done in here has stdout captured,
@@ -31,13 +35,14 @@ router.get('/add', (req, res, next) => {
         title: "Add a Note",
         docreate: true,
         notekey: '',
+        user: req.user,
         note: undefined
     });
 });
 
 
 // Save Note (update)
-router.post('/save', async (req, res, next) => {
+router.post('/save', ensureAuthenticated, async (req, res, next) => {
     try {
         let note;
         if (req.body.docreate === "create") {
@@ -64,6 +69,7 @@ router.get('/view', async (req, res, next) => {
         res.render('noteview', {
             title: note ? note.title : "",
             notekey: req.query.key,
+            user: req.user ? req.user : undefined,
             note: note
         });
     } catch (err) { next(err); }
@@ -72,13 +78,14 @@ router.get('/view', async (req, res, next) => {
 
 
 // Edit note (update)
-router.get('/edit', async (req, res, next) => {
+router.get('/edit', ensureAuthenticated, async (req, res, next) => {
     try {
         let note = await notes.read(req.query.key);
         res.render('noteedit', {
             title: note ? ("Edit " + note.title) : "Add a Note",
             docreate: false,
             notekey: req.query.key,
+            user: req.user,
             note: note
         });
     } catch (err) { next(err); }
@@ -87,12 +94,13 @@ router.get('/edit', async (req, res, next) => {
 
 
 // Ask to Delete note (destroy)
-router.get('/destroy', async (req, res, next) => {
+router.get('/destroy', ensureAuthenticated, async (req, res, next) => {
     try {
         let note = await notes.read(req.query.key);
         res.render('notedestroy', {
             title: note ? `Delete ${note.title}` : "",
             notekey: req.query.key,
+            user: req.user,
             note: note
         });
     } catch (err) { next(err); }
@@ -102,7 +110,7 @@ router.get('/destroy', async (req, res, next) => {
 
 
 // Really destroy note (destroy)
-router.post('/destroy/confirm', async (req, res, next) => {
+router.post('/destroy/confirm', ensureAuthenticated, async (req, res, next) => {
     try {
         await notes.destroy(req.body.notekey);
         res.redirect('/');
