@@ -144,6 +144,8 @@ app.use(logger(process.env.REQUEST_LOG_FORMAT ||'dev', {
 //view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+//app.use(express.static("images"));
+
 hbs.registerPartials(path.join(__dirname, 'partials'));
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -165,6 +167,8 @@ initPassport(app);
 
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'images')));
+//app.use(express.static("images"));
 app.use('/assets/vender/feather-icons', express.static(path.join(__dirname, 'node_modules', 'feather-icons', 'dist')));
 app.use('assets/vendor/bootstrap', express.static(path.join(__dirname, 'node_modules', 'bootstrap', 'dist')));
 

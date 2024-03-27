@@ -5,6 +5,7 @@
 import { default as express } from 'express';
 import { NotesStore as notes } from '../models/notes-store.mjs';
 export const router = express.Router();
+import { facebookLogin } from './users.mjs';
 
 import { default as DBG } from 'debug';
 const debug = DBG('notes:debug');
@@ -36,7 +37,8 @@ router.get('/add', ensureAuthenticated,(req, res, next) => {
         docreate: true,
         notekey: '',
         user: req.user,
-        note: undefined
+        note: undefined,
+        facebookLogin: facebookLogin
     });
 });
 
@@ -70,7 +72,8 @@ router.get('/view', async (req, res, next) => {
             title: note ? note.title : "",
             notekey: req.query.key,
             user: req.user ? req.user : undefined,
-            note: note
+            note: note,
+            facebookLogin: facebookLogin
         });
     } catch (err) { next(err); }
 });
@@ -86,7 +89,8 @@ router.get('/edit', ensureAuthenticated, async (req, res, next) => {
             docreate: false,
             notekey: req.query.key,
             user: req.user,
-            note: note
+            note: note,
+            facebookLogin: facebookLogin
         });
     } catch (err) { next(err); }
 });
@@ -101,7 +105,8 @@ router.get('/destroy', ensureAuthenticated, async (req, res, next) => {
             title: note ? `Delete ${note.title}` : "",
             notekey: req.query.key,
             user: req.user,
-            note: note
+            note: note,
+            facebookLogin: facebookLogin
         });
     } catch (err) { next(err); }
 });

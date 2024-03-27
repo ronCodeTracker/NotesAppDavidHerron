@@ -6,7 +6,7 @@
 import * as express from 'express'
 import { NotesStore as notes4 } from '../models/notes-store.mjs';
 //import useModel from '../models/notes-store.mjs';
- 
+import { facebookLogin } from './users.mjs'
 
 
 //var express = require('express');
@@ -31,7 +31,7 @@ router.get('/', async (req, res, next) => {
         });
         const notelist = await Promise.all(keyPromises);
         //console.log(util.inspect(notelist));
-        res.render('index', { title: 'Notes', notelist: notelist, user: req.user ? req.user : undefined });
+        res.render('index', { title: 'Notes', notelist: notelist, user: req.user ? req.user : undefined, facebookLogin: facebookLogin });
 
     } catch (err) {
         next(err);
