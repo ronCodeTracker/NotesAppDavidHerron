@@ -95,7 +95,7 @@ router.get('/login', function (req, res, next) {
 
 
 // extra comma?
-router.post('/login', passport.authenticate('local', {
+router.post('/login', passport.authenticate('facebook', { scope: ['profile'],
 successRedirect: '/', // SUCCESS: Go to home page
     failureRedirect: 'login', // FAIL: Go to /users/login
     
