@@ -19,8 +19,8 @@ import { default as passportLocal } from 'passport-local';
 const LocalStrategy = passportLocal.Strategy;
 import * as usersModel from '../models/users-superagent.mjs';
 import { sessionCookieName } from '../app.mjs';
-import passportFacebook from 'passport-facebook';
-const FacebookStrategy = passportFacebook.Strategy;
+//import passportFacebook from 'passport-facebook';
+//const FacebookStrategy = passportFacebook.Strategy;
 
 
 
@@ -68,7 +68,7 @@ router.get('/login', function (req, res, next) {
 // extra comma?
 
 
-router.post('/login', passport.authenticate('local',
+router.post('/login', passport.authenticate('local', {
     successRedirect: '/', // SUCCESS: Go to home page
     failureRedirect: 'login', // FAIL: Go to /users/login
 
