@@ -64,4 +64,6 @@ typings/
 
 /notes-sequelize.sqlite3
 
+/chap07.sqlite3
+
 
