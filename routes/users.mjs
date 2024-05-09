@@ -19,8 +19,8 @@ import { default as passportLocal } from 'passport-local';
 const LocalStrategy = passportLocal.Strategy;
 import * as usersModel from '../models/users-superagent.mjs';
 import { sessionCookieName } from '../app.mjs';
-//import passportFacebook from 'passport-facebook';
-//const FacebookStrategy = passportFacebook.Strategy;
+import passportFacebook from 'passport-facebook';
+const FacebookStrategy = passportFacebook.Strategy;
 
 
 
@@ -48,6 +48,43 @@ export function ensureAuthenticated(req, res, next) {
     catch (e) {
         next(e);
     }
+}
+
+
+const facebookcallback = process.env.FACEBOOK_CALLBACK_HOST ? process.env.FACEBOOK_CALLBACK_HOST : "http://localhost:3000";
+
+export var facebookLogin;
+
+if (typeof process.env.FACEBOOK_APP_ID !== 'undefined' && process.env.FACEBOOK_APP_ID !== '' && typeof process.env.FACEBOOK_APP_SECRET !== 'undefined' && process.env.FACEBOOK_APP_SECRET !== '') {
+
+
+    passport.use(new FacebookStrategy({
+        clientID: process.env.FACEBOOK_APP_ID,
+        clientSecret: process.env.FACEBOOK_APP_SECRET,
+        callbackURL: `${facebookcallback}/users/auth/facebook/callback`
+    },
+        async function (accessToken, refreshToken, profile, done) {
+            try {
+
+                done(null, await usersModel.findOrCreate({
+                    id: profile.username, username: profile.username,
+                    password: "", provider: profile.provider, familyName: profile.displayName,
+                    givenName: "", middleName: "", photos: profile.photos, emails: profile.emails
+
+
+                }));
+            }
+            catch (err) { done(err); }
+        }
+    ));
+    facebookLogin = true;
+
+
+
+
+
+} else {
+    facebookLogin = false;
 }
 
 
@@ -90,6 +127,48 @@ router.get('/logout', function (req, res, next) {
         next(e);
     }
 
+});
+
+
+router.get('/signup', function (req, res, next) {
+
+    res.render('signup', {username: req.username, password: req.password });
+
+});
+
+// database code need to be changed for Notes database !!!!!!!!!!!!!!!
+router.post('/signup', function (req, res, next) {
+    var salt = crypto.randomBytes(16);
+    crypto.pbkdf2(req.body.password, salt, 310000, 32, 'sha256', async function (err, hashedPassword) {
+        if (err) { return next(err); }
+
+        try {
+
+            await usersModel.findOrCreate({
+                id: req.body.username, password: req.body.password
+            })
+        }
+        catch (err) { console.log(err); }
+        
+
+
+
+        //db.run('INSERT INTO users (username, hashed_password, salt) VALUES (?, ?, ?)', [
+        //    req.body.username,
+        //    hashedPassword,
+        //    salt
+        //], function (err) {
+        //    if (err) { return next(err); }
+        //    var user = {
+        //        id: this.lastID,
+        //        username: req.body.username
+        //    };
+        //    req.login(user, function (err) {
+        //        if (err) { return next(err); }
+        //        res.redirect('/');
+        //    });
+        //});
+    });
 });
 
 

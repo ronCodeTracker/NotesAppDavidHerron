@@ -61,9 +61,11 @@ typings/
 .next
 
 
-
+/notes-fs-data
+/notes.level
 /notes-sequelize.sqlite3
 
 /chap07.sqlite3
+/data
 
 

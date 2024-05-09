@@ -81,7 +81,10 @@ useNotesModel(process.env.NOTES_MODEL ? process.env.NOTES_MODEL : "memory")
     .then(store => { console.log("77777777777777777777 memory or something 7777777777777777777" + store); })
 .catch(err => { onError({ code: 'ENOTESSTORE', err }); });
 
-
+//  ***********************************************************
+//  import dotenv package as is obvious
+//  ***********************************************************
+import dotenv from 'dotenv/config.js';
 
 
 // import { router as notesRouter } from './routes/notes.mjs';
