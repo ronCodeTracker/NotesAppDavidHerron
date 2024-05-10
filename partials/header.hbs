@@ -54,17 +54,23 @@
         <div class="collapse navbar-collapse" id="navbarLogIn">
             <span class="navbar-text text-dark col">{{title}}</span>
 
-            <a class="btn btn-dark col-auto" href="/users/logout">Log Out <span class="badge badge-light">{{ user.username }}</span></a>
+            <a class="btn btn-primary col-auto logoutOne" href="/users/logout">Log Out <span class="badge badge-light">{{ user.username }}</span></a>
             <!-- changed btn-light to btn-dark April 24, 2024  -->
-            <a class="nav-item nav-link btn btn-dark col-auto"
+            <a class="nav-item nav-link btn btn-primary col-auto addnoteOne"
                href='/notes/add'>ADD Note</a>
 
         </div>
         {{else}}
-        <div class="collapse navbar-collapse" id="navbarLogIn">
+        <div class="collapse navbar-collapse loginOne" id="navbarLogIn">
             <span class="navbar-text text-dark col"></span>
             <a class="btn btn-primary" href="/users/login">Log in</a>
-            
+
+        </div>
+        
+        <div class="collapse navbar-collapse signupOne" id="navbarLogIn">
+            <span class="navbar-text text-dark col"></span>
+            <a class="btn btn-primary" href="/users/signup">Sign up</a>
+
         </div>
         {{/if}}
 

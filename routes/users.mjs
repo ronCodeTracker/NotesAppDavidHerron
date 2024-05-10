@@ -22,7 +22,7 @@ import { sessionCookieName } from '../app.mjs';
 import passportFacebook from 'passport-facebook';
 const FacebookStrategy = passportFacebook.Strategy;
 
-
+import { default as crypto } from 'crypto';
 
 
 
@@ -132,24 +132,35 @@ router.get('/logout', function (req, res, next) {
 
 router.get('/signup', function (req, res, next) {
 
-    res.render('signup', {username: req.username, password: req.password });
+    res.render('signup');
 
 });
 
-// database code need to be changed for Notes database !!!!!!!!!!!!!!!
+
 router.post('/signup', function (req, res, next) {
     var salt = crypto.randomBytes(16);
     crypto.pbkdf2(req.body.password, salt, 310000, 32, 'sha256', async function (err, hashedPassword) {
-        if (err) { return next(err); }
-
+        if (err) { console.log(err) }
+        var providerName = "default";
+        var familyName = "default";
+        var givenName = "default";
+        var middleName = "default";
+        var emails = "default";
+        var photos = "default";
         try {
-
+            console.log("username: " + req.body.username);
+            console.log("password: " + req.body.password);
             await usersModel.findOrCreate({
-                id: req.body.username, password: req.body.password
+                id: req.body.username, password: hashedPassword, provider: providerName , familyName: familyName,
+                givenName: givenName, middleName: middleName, emails: emails, photos: photos, salt: salt
             })
         }
-        catch (err) { console.log(err); }
-        
+        catch (err) {
+            console.log(err);
+            console.log("error!!!");
+
+        }
+
 
 
 
@@ -169,6 +180,9 @@ router.post('/signup', function (req, res, next) {
         //    });
         //});
     });
+
+    console.log("username2: " + req.body.username);
+    console.log("password2: " + req.body.password);
 });
 
 
