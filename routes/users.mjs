@@ -89,6 +89,23 @@ if (typeof process.env.FACEBOOK_APP_ID !== 'undefined' && process.env.FACEBOOK_A
 
 
 
+// add LocalStrategy to passport
+
+
+passport.use(new LocalStrategy(
+    async (username, password, done) => {
+        try {
+            var check = await usersModel.userPasswordCheck(username,
+                password);
+            if (check.check) {
+                done(null, { id: check.username, username: check.username });
+            } else {
+                done(null, false, check.message);
+            }
+        } catch (e) { done(e); }
+    }
+));
+
 
 
 router.get('/login', function (req, res, next) {
@@ -187,23 +204,6 @@ router.post('/signup', function (req, res, next) {
 
 
 
-
-// add LocalStrategy to passport
-
-
-passport.use(new LocalStrategy(
-    async (username, password, done) => {
-        try {
-            var check = await usersModel.userPasswordCheck(username,
-                password);
-            if (check.check) {
-                done(null, { id: check.username, username: check.username });
-            } else {
-                done(null, false, check.message);
-            }
-        } catch (e) { done(e); }
-    }
-));
 
 
 passport.serializeUser(function (user, done) {
