@@ -32,6 +32,11 @@ import DBG from 'debug';
 const debug = DBG('notes:router-users');
 const error = DBG('notes:error-users');
 
+// global variables
+var localOne = true;
+var localTwo = false;
+
+
 
 export function initPassport(app) {
     app.use(passport.initialize());
@@ -57,6 +62,8 @@ export var facebookLogin;
 
 if (typeof process.env.FACEBOOK_APP_ID !== 'undefined' && process.env.FACEBOOK_APP_ID !== '' && typeof process.env.FACEBOOK_APP_SECRET !== 'undefined' && process.env.FACEBOOK_APP_SECRET !== '') {
 
+    
+
 
     passport.use(new FacebookStrategy({
         clientID: process.env.FACEBOOK_APP_ID,
@@ -74,22 +81,50 @@ if (typeof process.env.FACEBOOK_APP_ID !== 'undefined' && process.env.FACEBOOK_A
 
                 }));
             }
-            catch (err) { done(err); }
+            catch (err) {
+                
+                
+                done(err);//might leave this out if needed
+            }
         }
     ));
     facebookLogin = true;
-
+    
 
 
 
 
 } else {
     facebookLogin = false;
+
+    
+
+
 }
 
 
 
 // add LocalStrategy to passport
+
+
+// don't need strategy for this
+
+//if (lcoalOne = false) {
+
+//    passport.use(new LocalStrategy(
+//        async (username, password, done) => {
+//            try {
+//                done(null, await usersModel.findOrCreate({
+//                    id: username, username: username,
+//                    password: password
+
+
+//                }));
+//            } catch (e) { done(e); }
+//        }
+//    ));
+//}
+
 
 
 passport.use(new LocalStrategy(
@@ -105,8 +140,6 @@ passport.use(new LocalStrategy(
         } catch (e) { done(e); }
     }
 ));
-
-
 
 router.get('/login', function (req, res, next) {
     try {
@@ -149,34 +182,50 @@ router.get('/logout', function (req, res, next) {
 
 router.get('/signup', function (req, res, next) {
 
+    localOne = false;
     res.render('signup');
 
 });
 
 
-router.post('/signup', function (req, res, next) {
-    var salt = crypto.randomBytes(16);
-    crypto.pbkdf2(req.body.password, salt, 310000, 32, 'sha256', async function (err, hashedPassword) {
-        if (err) { console.log(err) }
-        var providerName = "default";
-        var familyName = "default";
-        var givenName = "default";
-        var middleName = "default";
-        var emails = "default";
-        var photos = "default";
-        try {
-            console.log("username: " + req.body.username);
-            console.log("password: " + req.body.password);
-            await usersModel.findOrCreate({
-                id: req.body.username, password: hashedPassword, provider: providerName , familyName: familyName,
-                givenName: givenName, middleName: middleName, emails: emails, photos: photos, salt: salt
-            })
-        }
-        catch (err) {
-            console.log(err);
-            console.log("error!!!");
+router.post('/signup', async() => {
 
-        }
+    try {
+
+        await usersModel.findOrCreate({
+            id: username, username: username,
+            password: password
+        })
+    }
+    catch {
+        res.redirect('signup');
+    }
+    
+    
+    res.redirect('/');
+
+        //var salt = crypto.randomBytes(16);
+        //crypto.pbkdf2(req.body.password, salt, 310000, 32, 'sha256', async function (err, hashedPassword) {
+        //    if (err) { console.log(err) }
+        //    var providerName = "default";
+        //    var familyName = "default";
+        //    var givenName = "default";
+        //    var middleName = "default";
+        //    var emails = "default";
+        //    var photos = "default";
+        //    try {
+        //        console.log("username: " + req.body.username);
+        //        console.log("password: " + req.body.password);
+        //        await usersModel.findOrCreate({
+        //            id: req.body.username, password: hashedPassword, provider: providerName , familyName: familyName,
+        //            givenName: givenName, middleName: middleName, emails: emails, photos: photos, salt: salt
+        //        })
+        //    }
+        //    catch (err) {
+        //        console.log(err);
+        //        console.log("error!!!");
+
+        //    }
 
 
 
@@ -196,11 +245,18 @@ router.post('/signup', function (req, res, next) {
         //        res.redirect('/');
         //    });
         //});
+
+        //console.log("username2: " + req.body.username);
+        //console.log("password2: " + req.body.password);
+
+
+        //successRedirect: '/', // SUCCESS: Go to home page
+        //failureRedirect: 'signup', // FAIL: Go to /users/signup
+
     });
 
-    console.log("username2: " + req.body.username);
-    console.log("password2: " + req.body.password);
-});
+    
+
 
 
 
