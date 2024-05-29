@@ -27,6 +27,11 @@ import url from 'url';
 const URL = url.URL;
 
 
+import { default as bcrypt } from 'bcrypt';
+const saltRounds = 10;
+
+
+
 import DBG from 'debug';
 const debug = DBG('notes:users-superagent');
 const error = DBG('notes:error-superagent');
@@ -56,7 +61,7 @@ export async function create(username, password,
     var res = await request
         .post(reqURL('/create-user')) // open new server connection with each request
         .send({
-            username, password, provider,
+            username, password: await hashpass(password), provider,
             familyName, givenName, middleName, emails, photos
         })
         .set('Content-Type', 'application/json')
@@ -71,7 +76,7 @@ export async function update(username, password,
     var res = await request
         .post(reqURL(`/update-user/${username}`)) // open new server connection with each request
         .send({
-            username, password, provider,
+            username, password: await hashpass(password), provider,
             familyName, givenName, middleName, emails, photos
         })
         .set('Content-Type', 'application/json')
@@ -115,7 +120,7 @@ export async function findOrCreate(profile) {
         .post(reqURL('/find-or-create')) // open new server connection with each request
         .send({
             username: profile.id,
-            password: profile.password,
+            password: await hashpass(profile.password),
             provider: profile.provider,
             familyName: profile.familyName,
             givenName: profile.givenName,
@@ -141,4 +146,8 @@ export async function listUsers() {
 }
 
 
-
+async function hashpass(password) {
+    let salt = await bcrypt.genSalt(saltRounds);
+    let hashed = await bcrypt.hash(password, salt);
+    return hashed;
+}

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@mui/material": "^5.15.2",
+    "bcrypt": "^5.1.1",
     "bootstrap": "4.5.x",
     "capture-console": "^1.0.2",
     "cookie-parser": "~1.4.4",
