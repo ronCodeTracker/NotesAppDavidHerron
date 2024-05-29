@@ -188,21 +188,24 @@ router.get('/signup', function (req, res, next) {
 });
 
 
-router.post('/signup', async() => {
+router.post('/signup', async (req, res, next) => {
 
     try {
-
+        console.log("signup");
+        //res.redirect('/');
         await usersModel.findOrCreate({
-            id: username, username: username,
-            password: password
+            id :req.body.username, username: req.body.username,
+            password: req.body.password
         })
+        res.redirect('/');
     }
     catch {
         res.redirect('signup');
+        //console.log("error");
     }
     
     
-    res.redirect('/');
+    //res.redirect('/');
 
         //var salt = crypto.randomBytes(16);
         //crypto.pbkdf2(req.body.password, salt, 310000, 32, 'sha256', async function (err, hashedPassword) {

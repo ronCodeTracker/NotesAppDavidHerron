@@ -51,6 +51,7 @@ router.post('/save', ensureAuthenticated, async (req, res, next) => {
 
 
         } else {
+            
             note = await notes.update(req.body.notekey,
                 req.body.title, req.body.body);
         }
