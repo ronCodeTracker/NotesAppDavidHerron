@@ -38,3 +38,91 @@ header {
     padding: 5px;
 }
 
+.mainpage{
+    color: white;
+    font-size: 20px;
+}
+
+
+.addnoteOne{
+    text-align:left;
+    padding: 7px 30px;
+    margin-left: 4%;
+}
+
+.logoutOne{
+
+    margin-left: 4%;
+    
+}
+
+
+.href001{
+    display: inline-block;
+
+}
+
+
+@media screen and (min-width: 800px) {
+
+
+   
+   .signup001{
+       margin-bottom: 5%;
+   }
+
+   
+
+}
+
+@media screen and (max-width: 800px) {
+
+    .addnoteOne {
+        margin-right: 70%;
+        margin-top: 4%;
+    }
+
+}
+@media screen and (max-width: 600px) {
+
+
+    .addnoteOne {
+        margin-right: 50%;
+        width: 200px;
+    }
+
+    .logoutOne {
+        width: 200px;
+    }
+
+}
+
+    @media screen and (max-width: 500px) {
+
+        .addnoteOne {
+            margin-right: 50%;
+            width: 200px;
+        }
+
+        .logoutOne {
+            width: 200px;
+        }
+    }
+
+
+
+    @media screen and (max-width: 400px) {
+
+        .addnoteOne {
+            margin-right: 60px;
+            padding-right: 30px;
+            padding-left: 30px;
+            width: 250px;
+        }
+
+        .logoutOne {
+            padding-right: 30px;
+            padding-left: 30px;
+            width: 250px;
+        }
+    }
