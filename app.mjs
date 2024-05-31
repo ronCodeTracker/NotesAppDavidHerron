@@ -58,7 +58,8 @@ import sessionFileStore from 'session-file-store';
 const FileStore = sessionFileStore(session);
 export const sessionCookieName = 'notescookie.sid';
 
-
+const sessionSecret = 'keyboard mouse';
+const sessionStore = new FileStore({ path: "sessions" });
 
 
 //   logging  ***********************************************
@@ -167,8 +168,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use(session({
-    store: new FileStore({ path: "sessions" }),
-    secret: 'keyboard mouse',
+    store: sessionStore,
+    secret: sessionSecret,
     resave: true,
     saveUninitialized: true,
     name: sessionCookieName
@@ -226,8 +227,27 @@ app.set('port', port);
 
 export const server = http.createServer(app);
 server.listen(port);
+server.on('request', (req, res) => {
+    debug(`${new Date().toISOString()}
+    request ${req.mehtod}
+     ${req.url}`);
+});
 server.on('error', onError);
-server.on('listening', onListening);
+server.on(`listening ${process.env.PORT}`, onListening);
+
+
+export const io = socketio(server);
+
+io.use(passportSocketIo.authorize({
+    cookieParser: cookieParser,
+    key: sessionCookieName,
+    secret: sessionSecret,
+    store: sessionStore
+}));
+
+
+
+
 
 
 // not needed
@@ -236,13 +256,6 @@ function logFileName(time, index) {
     return [formatDate(time), index, "file.log"].join("-");
 }
 
-
-
-server.on('request', (req, res) => {
-    debug(`${new Date().toISOString()}
-    request ${req.mehtod}
-     ${req.url}`);
-});
 
 
 
