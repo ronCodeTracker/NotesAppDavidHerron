@@ -51,7 +51,10 @@ export class Note {
 
 
 
-export class AbstractNotesStore {
+import EventEmitter from 'events';
+
+
+export class AbstractNotesStore extends EventEmitter{
 
 
     async close() { }
@@ -61,6 +64,17 @@ export class AbstractNotesStore {
     async destroy(key) { }
     async keylist() { }
     async count() { }
+
+    emitCreated(note) {
+        this.emit('notecreated', note);
+    }
+    emitUpdated(note) {
+        this.emit('noteupdated', note);
+    }
+    emitDestroyed(key) { this.emit('notedestroyed', key); }
+
+
+
 }
 
 

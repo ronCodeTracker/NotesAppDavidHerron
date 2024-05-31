@@ -6,7 +6,10 @@
 import * as express from 'express'
 import { NotesStore as notes4 } from '../models/notes-store.mjs';
 //import useModel from '../models/notes-store.mjs';
- 
+
+import { io } from '../app.mjs'; // for ch 9
+
+
 
 
 //var express = require('express');
@@ -21,29 +24,54 @@ export const router = express.Router();
 router.get('/', async (req, res, next) => {
 
     // ... placeholder for Notes home page code
-    console.log("^^^^^^^^^^^^666666666666666666666666666666666666666666666666666************************************");
+    //console.log("^^^^^^^^^^^^666666666666666666666666666666666666666666666666666************************************");
     try {
-        console.log("1111111111111111111111111-222222222222222222222-33333333333333333333333");
-        const keylist = await notes4.keylist();
-        console.log(`keylist !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  ` + keylist);
-        const keyPromises = keylist.map(key2 => {
-            return notes4.read(key2);
-        });
-        const notelist = await Promise.all(keyPromises);
+        
+        const notelist = await getKeyTitleList();
         //console.log(util.inspect(notelist));
         res.render('index', { title: 'Notes', notelist: notelist, user: req.user ? req.user : undefined });
 
     } catch (err) {
         next(err);
-        console.log("keylist:999999999999999999 ");
-        console.log("error error:  " + err);
-        console.log("error error error error!!!!!!!!!");
+        //console.log("keylist:999999999999999999 ");
+        //console.log("error error:  " + err);
+        //console.log("error error error error!!!!!!!!!");
     }
 
     
 });
 
 
+async function getKeyTitleList() {
+    const keylist = await notes4.keylist();
+
+    const keyPromises = keylist.map(key2 => notes.read(key));
+    const notelist = await Promise.all(keyPromises);
+    return notelist.map(note => {
+        return { key: note.key, title: note.title };
+
+    });
+
+
+};
+
+
+const emitNoteTitles = async () => {
+    const notelist = await getKeyTitleList();
+    io.of('/home').emit('notetitles', { notelist });
+};
+
+
+
+export function init() {
+    io.of('home').on('connect', socket => {
+        debug('socketio connection on /home');
+    });
+    notes.on('notecreated', emitNoteTitles);
+    notes.on('noteupdated', emitNoteTitles);
+    notes.on('notedestroy', emitNoteTitles);
+
+}
 
 
 

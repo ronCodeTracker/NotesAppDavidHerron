@@ -49,9 +49,15 @@ const __dirname = approotdir;
 
 import { normalizePort, onError, onListening, handle404, basicErrorHandler } from './appsupport.mjs';
 
-import { router as indexRouter } from './routes/index.mjs';
-import { router as notesRouter } from './routes/notes.mjs';
+//import { router as indexRouter } from './routes/index.mjs';
+//import { router as notesRouter } from './routes/notes.mjs';
 import { router as usersRouter, initPassport } from './routes/users.mjs';
+
+// chapter 9
+import { router as indexRouter, init as homeInit } from './routes/index.mjs';
+import { router as notesRouter, init as notesInit } from './routes/notes.mjs';
+
+
 
 import session from 'express-session';
 import sessionFileStore from 'session-file-store';
@@ -89,7 +95,11 @@ import { default as rfs } from 'rotating-file-stream';
 //   **********************************************************
 import { useModel as useNotesModel } from './models/notes-store.mjs';
 useNotesModel(process.env.NOTES_MODEL ? process.env.NOTES_MODEL : "memory")
-    .then(store => { console.log("77777777777777777777 memory or something 7777777777777777777" + store); })
+    .then(store => {
+        console.log("77777777777777777777 memory or something 7777777777777777777" + store);
+        homeInit();//added for ch 9
+        notesInit();//added for ch 9
+    })
 .catch(err => { onError({ code: 'ENOTESSTORE', err }); });
 
 //  ***********************************************************
@@ -233,7 +243,7 @@ server.on('request', (req, res) => {
      ${req.url}`);
 });
 server.on('error', onError);
-server.on(`listening ${process.env.PORT}`, onListening);
+server.on(`listening ${process.env.PORT }`, onListening);
 
 
 export const io = socketio(server);

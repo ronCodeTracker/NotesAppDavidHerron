@@ -54,7 +54,10 @@ export default class SequelizeNotesStore extends AbstractNotesStore {
             }, {
                 where: { notekey: key }
             });
-            return this.read(key);
+
+            var return001 = this.read(key);
+            this.emitUpdated(return001);
+            return return001;
         }
     }
 
@@ -65,7 +68,10 @@ export default class SequelizeNotesStore extends AbstractNotesStore {
             title: title,
             body: body
         });
-        return new Note(sqnote.notekey, sqnote.title, sqnote.body);
+
+        var notereturn = new Note(sqnote.notekey, sqnote.title, sqnote.body);
+        this.emitCreated(notereturn);
+        return notereturn;
     }
 
     async read(key) {
@@ -82,6 +88,7 @@ export default class SequelizeNotesStore extends AbstractNotesStore {
     async destroy(key) {
         await connectDB();
         await SQNote.destroy({ where: { notekey: key } });
+        this.emitDestroy(key);
         debug(`DESTROY ${key}`);
     }
 
