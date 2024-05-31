@@ -4,11 +4,14 @@
 
 
 import * as express from 'express'
-import { NotesStore as notes4 } from '../models/notes-store.mjs';
+import { NotesStore as notes } from '../models/notes-store.mjs';
 //import useModel from '../models/notes-store.mjs';
 
 import { io } from '../app.mjs'; // for ch 9
 
+import { default as DBG } from 'debug';
+const debug = DBG('notes:debug');
+const dbgerror = DBG('notes:error'); 
 
 
 
@@ -43,9 +46,9 @@ router.get('/', async (req, res, next) => {
 
 
 async function getKeyTitleList() {
-    const keylist = await notes4.keylist();
+    const keylist = await notes.keylist();
 
-    const keyPromises = keylist.map(key2 => notes.read(key));
+    const keyPromises = keylist.map(key => notes.read(key));
     const notelist = await Promise.all(keyPromises);
     return notelist.map(note => {
         return { key: note.key, title: note.title };
