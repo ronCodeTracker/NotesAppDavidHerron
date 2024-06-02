@@ -34,7 +34,7 @@ sql.connect(config2, function (err) {
         if (err) console.log(err)
         debug(recordset);
         console.log(recordset);
-    }
+    });
 
 });
 
