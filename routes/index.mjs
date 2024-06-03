@@ -72,7 +72,7 @@ export function init() {
     });
     notes.on('notecreated', emitNoteTitles);
     notes.on('noteupdated', emitNoteTitles);
-    notes.on('notedestroy', emitNoteTitles);
+    notes.on('notedestroyed', emitNoteTitles);
 
 }
 
