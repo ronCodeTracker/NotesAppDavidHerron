@@ -15,6 +15,9 @@ import * as capcon from 'capture-console';
 
 import { ensureAuthenticated } from './users.mjs';
 
+import { emitNoteTitles } from './index.mjs';
+import { io } from '../app.mjs'; // for ch 9
+
 //let stdout;
 
 // Add Note.
@@ -65,6 +68,8 @@ router.post('/save', ensureAuthenticated, async (req, res, next) => {
 router.get('/view', async (req, res, next) => {
     try {
         let note = await notes.read(req.query.key);
+        // req.user has something to do with Authentication
+        //console.log("render noteview with user: " + req.user);
         res.render('noteview', {
             title: note ? note.title : "",
             notekey: req.query.key,
@@ -80,6 +85,7 @@ router.get('/view', async (req, res, next) => {
 router.get('/edit', ensureAuthenticated, async (req, res, next) => {
     try {
         let note = await notes.read(req.query.key);
+        // req.user has something to do with Authentication
         res.render('noteedit', {
             title: note ? ("Edit " + note.title) : "Add a Note",
             docreate: false,

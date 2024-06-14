@@ -1,4 +1,4 @@
-
+ 
 
 
 
@@ -55,9 +55,9 @@ export default class SequelizeNotesStore extends AbstractNotesStore {
                 where: { notekey: key }
             });
 
-            var return001 = this.read(key);
-            this.emitUpdated(return001);
-            return return001;
+            var note2 = await this.read(key);
+            this.emitUpdated(note2);
+            return note2;
         }
     }
 
@@ -69,9 +69,9 @@ export default class SequelizeNotesStore extends AbstractNotesStore {
             body: body
         });
 
-        var notereturn = new Note(sqnote.notekey, sqnote.title, sqnote.body);
-        this.emitCreated(notereturn);
-        return notereturn;
+        var note = new Note(sqnote.notekey, sqnote.title, sqnote.body);
+        this.emitCreated(note);
+        return note;
     }
 
     async read(key) {

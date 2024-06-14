@@ -59,7 +59,7 @@ async function getKeyTitleList() {
 };
 
 
-const emitNoteTitles = async () => {
+export const emitNoteTitles = async () => {
     const notelist = await getKeyTitleList();
     io.of('/home').emit('notetitles', { notelist });
 };
@@ -67,12 +67,25 @@ const emitNoteTitles = async () => {
 
 
 export function init() {
-    io.of('home').on('connect', socket => {
-        debug('socketio connection on /home');
+    io.of('/notes').on('connect', socket => {
+        if (socket.handshake.query.key) {
+            socket.join(socket.handshake.query.key);
+        };
+        debug('socketio connection on /home changed');
     });
     notes.on('notecreated', emitNoteTitles);
-    notes.on('noteupdated', emitNoteTitles);
-    notes.on('notedestroyed', emitNoteTitles);
+    notes.on('noteupdated', note => {
+        const toemit = {
+            key:note.key, title:note.title, body:note.body
+        };
+        io.of('/notes').to(note.key).emit('noteupdated', toemit);
+        emitNoteTitles();
+
+    });
+    notes.on('notedestroyed', key => {
+        io.of('/notes').to(key).emit('notedestroyed', key);
+        emitNoteTitles();
+    });
 
 }
 
