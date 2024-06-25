@@ -79,11 +79,12 @@ router.get('/view', async (req, res, next) => {
         let note = await notes.read(req.query.key);
         // req.user has something to do with Authentication
         //console.log("render noteview with user: " + req.user);
+        const messages = await recentMessages('/notes',req.query.key);
         res.render('noteview', {
             title: note ? note.title : "",
             notekey: req.query.key,
             user: req.user ? req.user : undefined,
-            note: note
+            note: note, messages
         });
     } catch (err) { next(err); }
 });
@@ -149,24 +150,24 @@ export function init() {
     });
 
     msgEvents.on('newmessage', newmsg => {
-        debug(`newmessage ${util.inspect(newmsg)} ==> ${newmsg.namespace} ${newmsg.room}`);
+        //debug(`newmessage ${util.inspect(newmsg)} ==> ${newmsg.namespace} ${newmsg.room}`);
         io.of(newmsg.namespace).to(newmsg.room).emit('newmessage', newmsg);
     });
     msgEvents.on('destroymessage', data => {
-        debug(`destroymessage ${util.inspect(data)} ==> ${data.namespace} ${data.room}`);
+        //debug(`destroymessage ${util.inspect(data)} ==> ${data.namespace} ${data.room}`);
         io.of(data.namespace).to(data.room).emit('destroymessage', data);
     });
 
 
     io.of('/notes').on('connect', async (socket) => {
         let notekey = socket.handshake.query.key;
-        debug(`/notes browser connected on ${socket.id} ${util.inspect(socket.handshake.query)}`);
+        //debug(`/notes browser connected on ${socket.id} ${util.inspect(socket.handshake.query)}`);
         if (notekey) {
             socket.join(notekey);
 
             socket.on('create-message', async (newmsg, fn) => {
                 try {
-                    debug(`socket createMessage ${util.inspect(newmsg)}`);
+                    //debug(`socket createMessage ${util.inspect(newmsg)}`);
                     await postMessage(
                         newmsg.from, newmsg.namespace, newmsg.room,
                         newmsg.message);

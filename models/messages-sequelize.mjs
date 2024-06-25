@@ -1,8 +1,9 @@
+ 
 
-
-
-
-
+//Ronald Kiefer
+//David Herron book
+//June 21, 2024 Friday  noon time
+//This is the file that will be used to store the messages in the database
 
 
 import Sequelize from 'sequelize';
