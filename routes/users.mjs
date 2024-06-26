@@ -133,8 +133,10 @@ passport.use(new LocalStrategy(
             var check = await usersModel.userPasswordCheck(username,
                 password);
             if (check.check) {
+                console.log("checked &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
                 done(null, { id: check.username, username: check.username });
             } else {
+                console.log("error **************************************************");
                 done(null, false, check.message);
             }
         } catch (e) { done(e); }
